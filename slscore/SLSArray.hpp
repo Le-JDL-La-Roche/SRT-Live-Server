@@ -1,28 +1,3 @@
-
-/**
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2020 Edward.Wu
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
-
 #ifndef _SLSArray_INCLUDE_
 #define _SLSArray_INCLUDE_
 
@@ -35,29 +10,28 @@
 /**
  * CSLSArray
  */
-class CSLSArray
-{
-public :
-	CSLSArray();
-    ~CSLSArray();
+class CSLSArray {
+public:
+  CSLSArray();
+  ~CSLSArray();
 
-public :
-    int  put(const uint8_t *data, int len);
-    int  get(uint8_t *data, int size);
+public:
+  int  put(const uint8_t *data, int len);
+  int  get(uint8_t *data, int size);
 
-    void setSize(int n);
-    int  count();
-    void clear();
+  void setSize(int n);
+  int  count();
+  void clear();
 private:
-    uint8_t  *m_arrayData;
-    int       m_nDataSize;
-    int       m_nDataCount;
-    int       m_nWritePos;
-    int       m_nReadPos;
+  uint8_t *m_arrayData;
+  int       m_nDataSize;
+  int       m_nDataCount;
+  int       m_nWritePos;
+  int       m_nReadPos;
 
-    CSLSMutex m_mutex;
+  CSLSMutex m_mutex;
 
-    int       get_inline(uint8_t *data, int size);
+  int       get_inline(uint8_t *data, int size);
 
 };
 

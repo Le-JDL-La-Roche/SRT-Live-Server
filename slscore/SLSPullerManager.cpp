@@ -1,28 +1,3 @@
-
-/**
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2020 Edward.Wu
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
-
 #include <errno.h>
 #include <string.h>
 
@@ -51,7 +26,7 @@ int CSLSPullerManager::connect_loop()
 	int ret = SLS_ERROR;
 
 	if (m_sri == NULL || m_sri->m_upstreams.size() == 0) {
-	    sls_log(SLS_LOG_INFO, "[%p]CSLSPullerManager::connect_loop, failed, m_upstreams.size()=0, m_app_uplive=%s, m_stream_name=%s.",
+	    log(LOG_DFLT, "[%p]CSLSPullerManager::connect_loop, failed, m_upstreams.size()=0, m_app_uplive=%s, m_stream_name=%s.",
 	    		this, m_app_uplive, m_stream_name);
 		return ret;
 	}
@@ -75,11 +50,11 @@ int CSLSPullerManager::connect_loop()
 			break;
 		}
 		if (index == m_cur_loop_index) {
-		    sls_log(SLS_LOG_INFO, "[%p]CSLSPullerManager::connect_loop, failed, no available pullers, m_app_uplive=%s, m_stream_name=%s.",
+		    log(LOG_DFLT, "[%p]CSLSPullerManager::connect_loop, failed, no available pullers, m_app_uplive=%s, m_stream_name=%s.",
 		    		this, m_app_uplive, m_stream_name);
 			break;
 		}
-	    sls_log(SLS_LOG_INFO, "[%p]CSLSPullerManager::connect_loop, failed, index=%d, m_app_uplive=%s, m_stream_name=%s, szURL=‘%s’.",
+	    log(LOG_DFLT, "[%p]CSLSPullerManager::connect_loop, failed, index=%d, m_app_uplive=%s, m_stream_name=%s, szURL=‘%s’.",
 	    		this, m_app_uplive, m_stream_name, szURL);
 		index ++;
 	}
@@ -92,7 +67,7 @@ int CSLSPullerManager::start()
 	int ret = SLS_ERROR;
 
 	if (NULL == m_sri) {
-	    sls_log(SLS_LOG_INFO, "[%p]CSLSPullerManager::start, failed, m_upstreams.size()=0, m_app_uplive=%s, m_stream_name=%s.",
+	    log(LOG_DFLT, "[%p]CSLSPullerManager::start, failed, m_upstreams.size()=0, m_app_uplive=%s, m_stream_name=%s.",
 	    		this, m_app_uplive, m_stream_name);
 		return ret;
 	}
@@ -103,7 +78,7 @@ int CSLSPullerManager::start()
 	if (NULL != m_map_publisher) {
 	    CSLSRole * publisher = m_map_publisher->get_publisher(key_stream_name);
 	    if (NULL != publisher) {
-	        sls_log(SLS_LOG_INFO, "[%p]CSLSPullerManager::start, failed, key_stream_name=%s, publisher=%p exist.",
+	        log(LOG_DFLT, "[%p]CSLSPullerManager::start, failed, key_stream_name=%s, publisher=%p exist.",
 	    		this, key_stream_name, publisher);
 	        return ret;
 	    }
@@ -115,7 +90,7 @@ int CSLSPullerManager::start()
 	} else if (SLS_PM_HASH == m_sri->m_mode) {
 		ret = connect_hash();
 	} else {
-	    sls_log(SLS_LOG_INFO, "[%p]CSLSPullerManager::start, failed, wrong m_sri->m_mode=%d, m_app_uplive=%s, m_stream_name=%s.",
+	    log(LOG_DFLT, "[%p]CSLSPullerManager::start, failed, wrong m_sri->m_mode=%d, m_app_uplive=%s, m_stream_name=%s.",
 	    		this, m_sri->m_mode, m_app_uplive, m_stream_name);
 	}
 	return ret;
@@ -130,17 +105,17 @@ CSLSRelay *CSLSPullerManager::create_relay()
 int CSLSPullerManager::check_relay_param()
 {
 	if (NULL == m_role_list) {
-		sls_log(SLS_LOG_WARNING, "[%p]CSLSRelayManager::check_relay_param, failed, m_role_list is null, stream=%s.",
+		log(LOG_WARN, "[%p]CSLSRelayManager::check_relay_param, failed, m_role_list is null, stream=%s.",
 					this, m_stream_name);
 		return SLS_ERROR;
 	}
 	if (NULL == m_map_publisher) {
-		sls_log(SLS_LOG_WARNING, "[%p]CSLSRelayManager::check_relay_param, failed, m_map_publisher is null, stream=%s.",
+		log(LOG_WARN, "[%p]CSLSRelayManager::check_relay_param, failed, m_map_publisher is null, stream=%s.",
 					this, m_stream_name);
 		return SLS_ERROR;
 	}
 	if (NULL == m_map_data) {
-		sls_log(SLS_LOG_WARNING, "[%p]CSLSRelayManager::check_relay_param, failed, m_map_data is null, stream=%s.",
+		log(LOG_WARN, "[%p]CSLSRelayManager::check_relay_param, failed, m_map_data is null, stream=%s.",
 					this, m_stream_name);
 		return SLS_ERROR;
 	}
@@ -154,19 +129,19 @@ int CSLSPullerManager::set_relay_param(CSLSRelay *relay)
 	sprintf(key_stream_name, "%s/%s", m_app_uplive, m_stream_name);
 
 	if (SLS_OK != check_relay_param()){
-		sls_log(SLS_LOG_WARNING, "[%p]CSLSRelayManager::set_relay_param, check_relay_param failed, stream=%s.",
+		log(LOG_WARN, "[%p]CSLSRelayManager::set_relay_param, check_relay_param failed, stream=%s.",
 					this, key_stream_name);
 		return SLS_ERROR;
 	}
 
 	if (SLS_OK != m_map_publisher->set_push_2_pushlisher(key_stream_name, relay)) {
-		sls_log(SLS_LOG_WARNING, "[%p]CSLSRelayManager::set_relay_param, m_map_publisher->set_push_2_pushlisher, stream=%s.",
+		log(LOG_WARN, "[%p]CSLSRelayManager::set_relay_param, m_map_publisher->set_push_2_pushlisher, stream=%s.",
 					this, key_stream_name);
 		return SLS_ERROR;
 	}
 
 	if (SLS_OK != m_map_data->add(key_stream_name)) {
-		sls_log(SLS_LOG_WARNING, "[%p]CSLSRelayManager::set_relay_param, m_map_data->add failed, stream=%s, remove from relay=%p, m_map_publisher.",
+		log(LOG_WARN, "[%p]CSLSRelayManager::set_relay_param, m_map_data->add failed, stream=%s, remove from relay=%p, m_map_publisher.",
 					this, key_stream_name, relay);
 		m_map_publisher->remove(relay);
 		return SLS_ERROR;
@@ -183,7 +158,7 @@ int CSLSPullerManager::set_relay_param(CSLSRelay *relay)
 
 int  CSLSPullerManager::add_reconnect_stream(char* relay_url)
 {
-	m_reconnect_begin_tm = sls_gettime_ms();
+	m_reconnect_begin_tm = get_time_in_milliseconds();
 }
 
 int CSLSPullerManager::reconnect(int64_t cur_tm_ms)
@@ -195,7 +170,7 @@ int CSLSPullerManager::reconnect(int64_t cur_tm_ms)
 	m_reconnect_begin_tm = cur_tm_ms;
 
     if (SLS_OK != check_relay_param()) {
-		sls_log(SLS_LOG_WARNING, "[%p]CSLSPullerManager::reconnect, check_relay_param failed, stream=%s.",
+		log(LOG_WARN, "[%p]CSLSPullerManager::reconnect, check_relay_param failed, stream=%s.",
 					this, m_stream_name);
 		return SLS_ERROR;
     }
@@ -205,10 +180,10 @@ int CSLSPullerManager::reconnect(int64_t cur_tm_ms)
 
 	ret = start();
 	if (SLS_OK != ret) {
-		sls_log(SLS_LOG_INFO, "[%p]CSLSPullerManager::reconnect, start failed, key_stream_name=%s.",
+		log(LOG_DFLT, "[%p]CSLSPullerManager::reconnect, start failed, key_stream_name=%s.",
 					this, key_stream_name);
 	} else {
-		sls_log(SLS_LOG_INFO, "[%p]CSLSPullerManager::reconnect, start ok, key_stream_name=%s.",
+		log(LOG_DFLT, "[%p]CSLSPullerManager::reconnect, start ok, key_stream_name=%s.",
 					this, key_stream_name);
 	}
 	return ret;
