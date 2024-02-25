@@ -48,7 +48,7 @@ CSLSRole::CSLSRole() {
   memset(m_record_hls_ts_filename, 0, URL_MAX_LEN);
   m_record_hls_index_fd = 0;
   memset(m_record_hls_index_filename, 0, URL_MAX_LEN);
-  sprintf(m_record_hls_path, "./index");//default current path
+  sprintf(m_record_hls_path, "./hls");//default current path
   m_record_hls_begin_tm_ms = 0;
   m_record_hls_segment_duration = 10;//default 10s
   m_record_hls_target_duration = m_record_hls_segment_duration;

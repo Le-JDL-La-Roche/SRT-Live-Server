@@ -424,7 +424,7 @@ int CSLSListener::handler() {
 
   //! IS PUBLISHER?
   app_uplive = key_app;
-  sprintf(publisher_stream_id, "%s/%s", app_uplive.c_str(), stream_name);
+  sprintf(publisher_stream_id, "%s/%s", app_name, stream_name);
   ca = (sls_conf_app_t *)m_map_publisher->get_ca(app_uplive);
   if (NULL == ca) {
     log(LOG_ERRO, "\033[1;30m[↑ %s:%d@%s]\033[0m Client refused: no SLS configuration app info.",
