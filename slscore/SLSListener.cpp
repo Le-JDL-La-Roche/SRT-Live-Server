@@ -424,7 +424,7 @@ int CSLSListener::handler() {
 
   //! IS PUBLISHER?
   app_uplive = key_app;
-  sprintf(publisher_stream_id, "%s/%s", app_name, stream_name);
+  sprintf(publisher_stream_id, "%s/%s", app_uplive.c_str(), stream_name);
   ca = (sls_conf_app_t *)m_map_publisher->get_ca(app_uplive);
   if (NULL == ca) {
     log(LOG_ERRO, "\033[1;30m[↑ %s:%d@%s]\033[0m Client refused: no SLS configuration app info.",
@@ -455,8 +455,8 @@ int CSLSListener::handler() {
   pub->set_stat_info_base(stat_info);
   pub->set_http_url(m_http_url_role);
   //set hls record path
-  sprintf(tmp, "%s/%s",
-    m_record_hls_path_prefix, publisher_stream_id);
+  sprintf(tmp, "%s/%s/%s",
+    m_record_hls_path_prefix, app_name, stream_name);
   pub->set_record_hls_path(tmp);
 
   log(LOG_DFLT, "\033[1;30m[↑ %s:%d@%s]\033[0m Publisher created.",

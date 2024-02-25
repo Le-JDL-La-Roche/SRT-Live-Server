@@ -249,6 +249,10 @@ int CSLSRole::check_http_client() {
 }
 
 void CSLSRole::close_hls_file() {
+  if (0 != m_record_hls_index_fd) {
+    lseek(m_record_hls_index_fd, 0, SEEK_END);
+    ::write(m_record_hls_index_fd, "##EXT-X-ENDLIST\n", strlen(ts_item));
+  }
   ::close(m_record_hls_index_fd);
   m_record_hls_index_fd = 0;
 }
@@ -308,16 +312,16 @@ void CSLSRole::check_hls_file() {
       m_record_hls_index_fd = ::open(m_record_hls_index_filename, O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IXOTH);
     else
       m_record_hls_index_fd = ::open(m_record_hls_index_filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IXOTH);
-    sprintf(m3u8_info, "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:%d\n#EXT-X-ENDLIST", (int)(m_record_hls_segment_duration + 1));
+    sprintf(m3u8_info, "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-MEDIA-SEQUENCE:0\n#EXT-X-TARGETDURATION:%d\n#EXT-X-DISCONTINUITY\n", (int)(m_record_hls_segment_duration + 1));
     ::write(m_record_hls_index_fd, m3u8_info, strlen(m3u8_info));
     log(LOG_DFLT, "Created HLS index file '%s'.", m_record_hls_index_filename);
   }
 
   //* Write to temp index file
   char ts_item[URL_MAX_LEN] = { 0 };
-  sprintf(ts_item, "#EXTINF:%0.3f,\n%s\n#EXT-X-ENDLIST", d, m_record_hls_ts_filename);
+  sprintf(ts_item, "#EXTINF:%0.3f,\n%s", d, m_record_hls_ts_filename);
   if (0 != m_record_hls_index_fd) {
-    lseek(m_record_hls_index_fd, -14, SEEK_END);
+    lseek(m_record_hls_index_fd, 0, SEEK_END);
     ::write(m_record_hls_index_fd, ts_item, strlen(ts_item));
   }
 
