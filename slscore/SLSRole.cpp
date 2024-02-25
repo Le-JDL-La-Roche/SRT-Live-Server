@@ -251,7 +251,7 @@ int CSLSRole::check_http_client() {
 void CSLSRole::close_hls_file() {
   if (0 != m_record_hls_index_fd) {
     lseek(m_record_hls_index_fd, 0, SEEK_END);
-    ::write(m_record_hls_index_fd, "##EXT-X-ENDLIST\n", strlen(ts_item));
+    ::write(m_record_hls_index_fd, "##EXT-X-ENDLIST\n", strlen("##EXT-X-ENDLIST\n"));
   }
   ::close(m_record_hls_index_fd);
   m_record_hls_index_fd = 0;
