@@ -1,6 +1,5 @@
 SHELL = /bin/sh
 MAIN_NAME=sls
-CLIENT_NAME=slc
 INC_PATH = -I./ -I../ -I./slscore -I./include
 LIB_PATH =  -L ./lib
 LIBRARY_FILE = -lpthread -lz -lsrt
@@ -36,7 +35,6 @@ OBJS = $(OUTPUT_PATH)/SLSLog.o \
 	$(OUTPUT_PATH)/SLSPullerManager.o\
 	$(OUTPUT_PATH)/SLSPusherManager.o\
 	$(OUTPUT_PATH)/SLSMapRelay.o\
-	$(OUTPUT_PATH)/SLSClient.o\
 	$(OUTPUT_PATH)/TCPRole.o\
 	$(OUTPUT_PATH)/SLSArray.o\
 	$(OUTPUT_PATH)/HttpRoleList.o\
@@ -51,11 +49,9 @@ all: $(OBJS)
 	mkdir -p ${LOG_PATH}
 	mkdir -p ${OUTPUT_PATH}
 	mkdir -p ${BIN_PATH}
-	${CXX} -o ${BIN_PATH}/${MAIN_NAME}   srt-live-server.cpp $(OBJS) $(CFLAGS) $(INC_PATH) $(LIB_PATH) $(LIBRARY_FILE)
-	${CXX} -o ${BIN_PATH}/${CLIENT_NAME} srt-live-client.cpp $(OBJS) $(CFLAGS) $(INC_PATH) $(LIB_PATH) $(LIBRARY_FILE)
-	#******************************************************************************#
-	#                          Build successful !                                  #
-	#******************************************************************************#
+	${CXX} -g -o ${BIN_PATH}/${MAIN_NAME}   srt-live-server.cpp $(OBJS) $(CFLAGS) $(INC_PATH) $(LIB_PATH) $(LIBRARY_FILE)
+	
+	Build done!
 
 $(OUTPUT_PATH)/%.o: ./$(CORE_PATH)/%.cpp
 	${CXX} -c $(CFLAGS) $< -o $@ $(INC_FLAGS)
