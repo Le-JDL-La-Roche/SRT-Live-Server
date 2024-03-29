@@ -319,7 +319,7 @@ void CSLSRole::check_hls_file() {
 
   //* Write to temp index file
   char ts_item[URL_MAX_LEN] = { 0 };
-  sprintf(ts_item, "#EXTINF:%0.3f,\n%s", d, m_record_hls_ts_filename);
+  sprintf(ts_item, "#EXTINF:%0.3f,\n%s\n", d, m_record_hls_ts_filename);
   if (0 != m_record_hls_index_fd) {
     lseek(m_record_hls_index_fd, 0, SEEK_END);
     ::write(m_record_hls_index_fd, ts_item, strlen(ts_item));
